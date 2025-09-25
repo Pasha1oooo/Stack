@@ -3,12 +3,14 @@
 
 #include "COLORS.h"
 //inversive Assert
-#define MyAssert(ARG)                                       \
+#define MyAssert(ARG){                                  \
     if(ARG){                                             \
-        printf("%s " WordRED("ERROR") ":" #ARG              \
-           " FILE: %s  FUNCTION: %s  LINE: %d\n",           \
+        FILE * fin = fopen("logs.txt", "a");\
+        fprintf(fin, "%s  ERROR IncorrectCapacity Capacity < 0 : FILE: %s  FUNCTION: %s  LINE: %d\n",           \
             __TIME__, __FILE__, __FUNCTION__,__LINE__);     \
-        abort();                                            \
-    }
+        fclose(fin);\
+        printf(WordRED("ERROR: IncorrectCapacity in init") " IncorrectCapacity Capacity < 0\n");\
+    abort();}\
+    }\
 
 #endif
