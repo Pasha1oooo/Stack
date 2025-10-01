@@ -13,7 +13,21 @@ CXXFLAGS= -g -lm -D _DEBUG -ggdb3  -O0 -Wall -Wextra \
     -Wstack-usage=8192 -pie -fPIE -Werror=vla \
     -fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,float-divide-by-zero,integer-divide-by-zero,leak,nonnull-attribute,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,undefined,unreachable,vla-bound,vptr
 
-all: MAIN
+all: stack tsl
 
-MAIN: MAIN.cpp
-	@g++ ${CXXFLAGS} MAIN.cpp -o stack
+run: all
+	./tsl
+	./stack
+
+tsl: Translator.cpp
+	g++ -o tsl Translator.cpp
+
+stack: Main.o StackFuncs.o
+	g++  Main.o StackFuncs.o -o stack
+
+StackFuncs.o: StackFuncs.cpp StackHedder.h
+	g++  -c StackFuncs.cpp -o StackFuncs.o
+
+Main.o: Main.cpp Colors.h
+	g++  -c Main.cpp -o Main.o
+
