@@ -2,14 +2,16 @@
 #define MyAssert_H
 
 #include "COLORS.h"
+
+#define IncorrectCapacity() " ERROR: IncorrectCapacity: capacity <= 0 "
 //inversive Assert
 #define MyAssert(ARG){                                  \
     if(ARG){                                             \
         FILE * fin = fopen("logs.txt", "a");\
-        fprintf(fin, "%s  ERROR IncorrectCapacity Capacity < 0 : FILE: %s  FUNCTION: %s  LINE: %d\n",           \
+        fprintf(fin, "%s  " IncorrectCapacity() " : FILE: %s  FUNCTION: %s  LINE: %d\n",           \
             __TIME__, __FILE__, __FUNCTION__,__LINE__);     \
         fclose(fin);\
-        printf(WordRED("ERROR: IncorrectCapacity in init") " IncorrectCapacity Capacity < 0\n");\
+        printf(WordRED(IncorrectCapacity()) " IncorrectCapacity Capacity < 0\n");\
     abort();}\
     }\
 

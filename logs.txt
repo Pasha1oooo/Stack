@@ -65,3 +65,7 @@
 10:27:54  ERROR IncorrectCapacity Capacity < 0 : FILE: MAIN.cpp  FUNCTION: ComparisonStr  LINE: 161
 10:29:46  ERROR IncorrectCapacity Capacity < 0 : FILE: MAIN.cpp  FUNCTION: ComparisonStr  LINE: 161
 10:50:09 ERROR: BadAdress data = NULL  FILE: MAIN.cpp  FUNCTION: StackPush  LINE: 82
+18:58:49 ERROR: BadAdress data = NULL  FILE: MAIN.cpp  FUNCTION: StackPush  LINE: 81
+19:15:42 ERROR: BadAdress data = NULL  FILE: MAIN.cpp  FUNCTION: StackPush  LINE: 81
+09:24:11  ERROR IncorrectCapacity Capacity < 0 : FILE: MAIN.cpp  FUNCTION: StackInit  LINE: 68
+09:24:11  ERROR IncorrectCapacity Capacity < 0 : FILE: MAIN.cpp  FUNCTION: StackInit  LINE: 68

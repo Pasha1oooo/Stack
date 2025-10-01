@@ -5,10 +5,14 @@
 #define BLUE "\033[0;34;40m"
 #define RED "\033[0;31;40m"
 #define GREEN "\033[1;32;40m"
+#define PURPLE "\033[0;35;40m"
+
 #define RESET "\033[0m"
+
 #define WordBLUE(ARG)   BLUE ARG RESET
 #define WordGREEN(ARG)  GREEN ARG RESET
 #define WordRED(ARG)    RED ARG RESET
 #define WordYELLOW(ARG) YELLOW ARG RESET
+#define WordPURPLE(ARG) PURPLE ARG RESET
 
 #endif
