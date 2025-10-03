@@ -58,7 +58,7 @@ state Translation(FILE * fin1, FILE * fin2) {
         fprintf(fin2, "7 ");
         return success;
     }
-    else if(ComparisonStr(func, "PRINT")) {
+    else if(ComparisonStr(func, "OUT")) {
         fprintf(fin2, "8 ");
         return success;
     }

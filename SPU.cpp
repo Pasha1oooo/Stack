@@ -19,7 +19,7 @@ typedef enum Stack_command{
     MUL = 5,
     DIV = 6,
     SQRT = 7,
-    PRINT = 8,
+    OUT = 8,
     HLT = 9
 }Stack_command;
 
@@ -59,7 +59,7 @@ state DoFunc(stack_t * stk, int funcs[], int * i){
         LOGS(StackPop(stk, &a));
         LOGS(StackPush(stk, (int)sqrt(a)));
         return success;
-    case PRINT :
+    case OUT :
         for(int i = 0; i < stk->capacity; i++){
             if(i == 0 || i == stk->capacity - 1){
                 printf(WordPURPLE(" [%d] %d ") "\n",  i,stk->data[i]);
