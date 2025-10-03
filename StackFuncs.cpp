@@ -13,8 +13,8 @@ static float size_change_coefficient_reverse = 0.25;
 void StackInit(stack_t * stk, int capacity){
     stk->capacity = capacity + 2;
     stk->data = (int*)calloc((size_t)stk->capacity, sizeof(int));
-    CanaryLeft(stk)  = NUM_Canary;
-    CanaryRight(stk) = NUM_Canary;
+    CANARYLEFT(stk)  = NUM_CANARY;
+    CANARYRIGHT(stk) = NUM_CANARY;
     stk->size = 1;
 
     return;
@@ -24,7 +24,9 @@ StackErr_ID StackPush(stack_t * stk, int elem){
     StackErr_ID err = StackVerify(stk);
     if(err != no_err) return err;
 
-    if(stk->capacity - 2 <= stk->size) StackSizeIncrese(stk, size_change_coefficient);
+    if(stk->capacity - 2 <= stk->size){
+        ChangeStackSize(stk, size_change_coefficient);
+    }
 
     *((stk->data) + (stk->size)) = elem;
     stk->size += 1;
@@ -34,9 +36,10 @@ StackErr_ID StackPush(stack_t * stk, int elem){
 }
 
 StackErr_ID  StackPop(stack_t * stk, int * elem){
+    if(stk->size <= 1) return err_GetFromEmptyStack;
+
     StackErr_ID err = StackVerify(stk);
     if(err != no_err) return err;
-    if(stk->size <= 1) return err_GetFromEmptyStack;
 
     if(stk->size <= stk->capacity / 4){
         ChangeStackSize(stk, size_change_coefficient_reverse);
@@ -46,6 +49,7 @@ StackErr_ID  StackPop(stack_t * stk, int * elem){
     stk->size -= 1;
 
     err = StackVerify(stk);
+    return err;
 }
 
 void StackDestroy(stack_t * stk){
@@ -59,7 +63,7 @@ void StackDestroy(stack_t * stk){
 }
 
 StackErr_ID StackVerify(stack_t * stk){
-    if (CanaryLeft(stk) != NUM_Canary || CanaryRight(stk) != NUM_Canary){
+    if (CANARYLEFT(stk) != NUM_CANARY || CANARYRIGHT(stk) != NUM_CANARY){
         return err_DeadCanary;
     }
     else if (stk->data == NULL){
@@ -77,7 +81,7 @@ StackErr_ID ChangeStackSize(stack_t * stk, float x){
 
     stk->capacity = (int)((stk->capacity - 2) * x) + 2;
     stk->data = (int*)realloc(stk->data, (size_t)(stk->capacity)*(sizeof(int)));
-    CanaryRight(stk) = NUM_Canary;
+    CANARYRIGHT(stk) = NUM_CANARY;
 
     err = StackVerify(stk);
     return err;

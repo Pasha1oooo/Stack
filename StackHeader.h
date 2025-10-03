@@ -6,9 +6,9 @@
 #define BadAdress " ERROR: BadAdress: data = NULL "
 #define DeadCanary " ERROR: DeadCanary: attack to Stack from right or left "
 
-#define NUM_Canary 0xDEADBABE
-#define CanaryLeft(stack) *(stack->data)
-#define CanaryRight(stack) *(stack->data + stack->capacity - 1)
+#define CANARYLEFT(stack) *(stack->data)
+#define CANARYRIGHT(stack) *(stack->data + stack->capacity - 1)
+#define NUM_CANARY 0xDEADBABE
 
 #define LOGS(StackErr_ID) PrintLogs(StackErr_ID, __LINE__, __FUNCTION__);
 
@@ -30,7 +30,7 @@ typedef struct stack_t{
 void            StackInit(stack_t * stk, int capacity);
 StackErr_ID     StackPush(stack_t * stk, int elem);
 void            StackDestroy(stack_t * stk);
-StackErr_ID     ChangeStackSize(stack_t * stk, int x);
+StackErr_ID     ChangeStackSize(stack_t * stk, float x);
 StackErr_ID     StackVerify(stack_t * stk);
 StackErr_ID     StackPop(stack_t * stk, int * elem);
 void            PrintLogs(StackErr_ID err, int line, const char * func);
