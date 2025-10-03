@@ -16,39 +16,42 @@ void StackInit(stack_t * stk, int capacity){
     CanaryLeft(stk)  = NUM_Canary;
     CanaryRight(stk) = NUM_Canary;
     stk->size = 1;
+    stk->err = no_err;
 
     return;
 }
 
-StackErr_ID StackPush(stack_t * stk, int elem){
-    StackErr_ID err = StackVerify(stk);
-    if(err != no_err) return err;
+void StackPush(stack_t * stk, int elem){
+    stk->err = StackVerify(stk);
+    if(stk->err != no_err) return;
 
-    if(stk->capacity - 2 <= stk->size) StackSizeIncrese(stk, size_change_coefficient);
+    if(stk->capacity - 2 <= stk->size) ChangeStackSize(stk, size_change_coefficient);
 
     *((stk->data) + (stk->size)) = elem;
     stk->size += 1;
 
-    err = StackVerify(stk);
-    return err;
+    stk->err = StackVerify(stk);
+    return;
 }
 
-StackErr_ID  StackPop(stack_t * stk, int * elem){
-    StackErr_ID err = StackVerify(stk);
-    if(err != no_err) return err;
-    if(stk->size <= 1) return err_GetFromEmptyStack;
+int  StackPop(stack_t * stk){
+    stk->err = StackVerify(stk);
+    if(stk->size <= 1) stk->err = err_GetFromEmptyStack;
+    if(stk->err != no_err) return 0; /////////////////////////////////////////////////////////////////
 
     if(stk->size <= stk->capacity / 4){
         ChangeStackSize(stk, size_change_coefficient_reverse);
     }
 
-    *elem = *((stk->data) + (stk->size) - 1);
+    int elem = *((stk->data) + (stk->size) - 1);
     stk->size -= 1;
 
-    err = StackVerify(stk);
+    stk->err = StackVerify(stk);
+    return elem;
 }
 
 void StackDestroy(stack_t * stk){
+    stk->err = err_BadAdress;
     free(stk->data);
     stk->data = NULL;
     stk->capacity = 0;
@@ -71,16 +74,16 @@ StackErr_ID StackVerify(stack_t * stk){
     return no_err;
 }
 
-StackErr_ID ChangeStackSize(stack_t * stk, float x){
-    StackErr_ID err = StackVerify(stk);
-    if(err != no_err) return err;
+void ChangeStackSize(stack_t * stk, float x){
+    stk->err = StackVerify(stk);
+    if(stk->err != no_err) return;
 
     stk->capacity = (int)((stk->capacity - 2) * x) + 2;
     stk->data = (int*)realloc(stk->data, (size_t)(stk->capacity)*(sizeof(int)));
     CanaryRight(stk) = NUM_Canary;
 
-    err = StackVerify(stk);
-    return err;
+    stk->err = StackVerify(stk);
+    return;
 }
 
 void PrintLogs(StackErr_ID err, int line, const char * func){

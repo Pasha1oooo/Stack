@@ -24,13 +24,14 @@ typedef struct stack_t{
     int * data = NULL;
     int   size = 0;
     int   capacity = 0;
+    StackErr_ID err = err_BadAdress;
 }stack_t;
 
 
 void            StackInit(stack_t * stk, int capacity);
-StackErr_ID     StackPush(stack_t * stk, int elem);
+void            StackPush(stack_t * stk, int elem);
 void            StackDestroy(stack_t * stk);
-StackErr_ID     ChangeStackSize(stack_t * stk, int x);
+void            ChangeStackSize(stack_t * stk, float x);
 StackErr_ID     StackVerify(stack_t * stk);
-StackErr_ID     StackPop(stack_t * stk, int * elem);
+int             StackPop(stack_t * stk);
 void            PrintLogs(StackErr_ID err, int line, const char * func);
