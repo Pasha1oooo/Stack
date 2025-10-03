@@ -1,18 +1,20 @@
 #include<stdio.h>
 #include <stdlib.h>
-#include "StackHedder.h"
+#include "StackHeader.h"
+#include "Colors.h"
 
-#define CanaryLeft *(stk->data)
-#define CanaryRight *(stk->data + stk->capacity - 1)
 
-//errId
+static FILE * fin = fopen("logs.txt", "a");
+
+static float size_change_coefficient = 4;
+static float size_change_coefficient_reverse = 0.25;
+
+
 void StackInit(stack_t * stk, int capacity){
-    //MyAssert(capacity < 0);
-
     stk->capacity = capacity + 2;
     stk->data = (int*)calloc((size_t)stk->capacity, sizeof(int));
-    CanaryLeft= NUM_Canary;
-    CanaryRight= NUM_Canary;
+    CanaryLeft(stk)  = NUM_Canary;
+    CanaryRight(stk) = NUM_Canary;
     stk->size = 1;
 
     return;
@@ -20,39 +22,30 @@ void StackInit(stack_t * stk, int capacity){
 
 StackErr_ID StackPush(stack_t * stk, int elem){
     StackErr_ID err = StackVerify(stk);
-    if(err != no_err){
-        return err;
-    }
+    if(err != no_err) return err;
 
-    if(stk->capacity - 2 <= stk->size){
-        StackSizeIncrese(stk);
-    }
+    if(stk->capacity - 2 <= stk->size) StackSizeIncrese(stk, size_change_coefficient);
+
     *((stk->data) + (stk->size)) = elem;
     stk->size += 1;
 
     err = StackVerify(stk);
     return err;
 }
-//
-StackErr_ID  StackPop(stack_t * stk, int elem){
-    StackErr_ID err = StackVerify(stk);
-    printlogs(err);
-    if(err != no_err){
-        return 0;
-    }
-    if(stk->size <= 1){
-        printf("Empty\n");
-        return 0;
-    }
-    if(stk->size <= stk->capacity / 4){
-        StackSizeReduce(stk);
-    }
-    int elem = *((stk->data) + (stk->size) - 1);
-    stk->size -= 1;
-    err = StackVerify(stk);
 
-    printlogs(err);
-    return elem;
+StackErr_ID  StackPop(stack_t * stk, int * elem){
+    StackErr_ID err = StackVerify(stk);
+    if(err != no_err) return err;
+    if(stk->size <= 1) return err_GetFromEmptyStack;
+
+    if(stk->size <= stk->capacity / 4){
+        ChangeStackSize(stk, size_change_coefficient_reverse);
+    }
+
+    *elem = *((stk->data) + (stk->size) - 1);
+    stk->size -= 1;
+
+    err = StackVerify(stk);
 }
 
 void StackDestroy(stack_t * stk){
@@ -66,7 +59,7 @@ void StackDestroy(stack_t * stk){
 }
 
 StackErr_ID StackVerify(stack_t * stk){
-    if (CanaryLeft != NUM_Canary || CanaryRight != NUM_Canary){
+    if (CanaryLeft(stk) != NUM_Canary || CanaryRight(stk) != NUM_Canary){
         return err_DeadCanary;
     }
     else if (stk->data == NULL){
@@ -78,30 +71,38 @@ StackErr_ID StackVerify(stack_t * stk){
     return no_err;
 }
 
-StackErr_ID StackSizeIncrese(stack_t * stk){
+StackErr_ID ChangeStackSize(stack_t * stk, float x){
     StackErr_ID err = StackVerify(stk);
-    if(err != no_err){
-        return err;
-    }
+    if(err != no_err) return err;
 
-    stk->capacity = ((stk->capacity - 2) * 2) + 2;
+    stk->capacity = (int)((stk->capacity - 2) * x) + 2;
     stk->data = (int*)realloc(stk->data, (size_t)(stk->capacity)*(sizeof(int)));
-    CanaryRight = NUM_Canary;
+    CanaryRight(stk) = NUM_Canary;
 
     err = StackVerify(stk);
     return err;
 }
 
-StackErr_ID StackSizeReduce(stack_t * stk){
-    StackErr_ID err = StackVerify(stk);
-    if(err != no_err){
-        return err;
-    }
-
-    stk->capacity = (stk->capacity / 2) + 2;
-    stk->data = (int*)realloc(stk->data, (size_t)(stk->capacity)*(sizeof(int)));
-    CanaryRight = NUM_Canary;
-
-    err = StackVerify(stk);
-    return err;
+void PrintLogs(StackErr_ID err, int line, const char * func){
+    switch(err){
+    case(err_IncorrectCapacity):
+        fprintf(fin,"%s " IncorrectCapacity " FILE: %s  FUNCTION: %s  LINE: %d\n", __TIME__, __FILE__, func, line);
+        printf(WordRED(IncorrectCapacity) " check logs \n");
+        fclose(fin);
+        break;
+    case(err_BadAdress):
+        fprintf(fin,"%s " BadAdress " FILE: %s  FUNCTION: %s  LINE: %d\n", __TIME__, __FILE__, func, line);
+        printf(WordRED(BadAdress) " check logs \n");
+        fclose(fin);
+        break;
+    case(err_DeadCanary):
+        fprintf(fin,"%s " DeadCanary " FILE: %s  FUNCTION: %s  LINE: %d\n", __TIME__, __FILE__, func, line);
+        printf(WordRED(DeadCanary) " check logs \n");
+        fclose(fin);
+        break;
+    case(err_GetFromEmptyStack):
+    case(no_err):
+    default:
+        break;
+    };
 }

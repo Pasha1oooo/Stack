@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include<math.h>
 #include "Colors.h"
-#include "StackHedder.h"
+#include "StackHeader.h"
 
 //#include "/home/pasha/Hadders/Hedder.h"
 // strings of errors
@@ -41,25 +41,25 @@ state DoFunc(stack_t * stk, Stack_command command, int ARG) {
         StackInit(stk, ARG);
         return success;
     case PUSH :
-        printlogs(StackPush(stk, ARG));
+        LOGS(StackPush(stk, ARG));
         return success;
     case POP :
         StackPop(stk);
         return success;
     case ADD :
-        printlogs(StackPush(stk, StackPop(stk) + StackPop(stk)));
+        LOGS(StackPush(stk, StackPop(stk) + StackPop(stk)));
         return success;
     case SUB :
-        printlogs(StackPush(stk, StackPop(stk) - StackPop(stk)));
+        StackPush(stk, StackPop(stk) - StackPop(stk));
         return success;
     case MUL :
-        printlogs(StackPush(stk, StackPop(stk) * StackPop(stk)));
+        StackPush(stk, StackPop(stk) * StackPop(stk));
         return success;
     case DIV :
-        printlogs(StackPush(stk, StackPop(stk) / StackPop(stk)));
+        StackPush(stk, StackPop(stk) / StackPop(stk));
         return success;
     case SQRT :
-        printlogs(StackPush(stk, (int)sqrt(StackPop(stk))));
+        StackPush(stk, (int)sqrt(StackPop(stk)));
         return success;
     case PRINT :
         for(int i = 0; i < stk->capacity; i++){

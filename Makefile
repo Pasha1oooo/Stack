@@ -25,7 +25,7 @@ tsl: Translator.cpp
 stack: Main.o StackFuncs.o
 	g++  Main.o StackFuncs.o -o stack
 
-StackFuncs.o: StackFuncs.cpp StackHedder.h
+StackFuncs.o: StackFuncs.cpp StackHeader.h
 	g++  -c StackFuncs.cpp -o StackFuncs.o
 
 Main.o: Main.cpp Colors.h
