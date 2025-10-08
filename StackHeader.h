@@ -1,3 +1,6 @@
+#ifndef stack_header
+#define stack_header
+
 #include<stdio.h>
 #include <stdlib.h>
 
@@ -8,7 +11,7 @@
 
 #define CANARYLEFT(stack) *(stack->data)
 #define CANARYRIGHT(stack) *(stack->data + stack->capacity - 1)
-#define NUM_CANARY 0xDEADBABE
+#define CANARY_NUM 0xDEADBABE
 
 #define LOGS(StackErr_ID) PrintLogs(StackErr_ID, __LINE__, __FUNCTION__);
 
@@ -27,10 +30,11 @@ typedef struct stack_t{
 }stack_t;
 
 
-void            StackInit(stack_t * stk, int capacity);
-StackErr_ID     StackPush(stack_t * stk, int elem);
-void            StackDestroy(stack_t * stk);
-StackErr_ID     ChangeStackSize(stack_t * stk, float x);
 StackErr_ID     StackVerify(stack_t * stk);
+StackErr_ID     ChangeStackSize(stack_t * stk, float x);
+StackErr_ID     StackPush(stack_t * stk, int elem);
 StackErr_ID     StackPop(stack_t * stk, int * elem);
+void            StackInit(stack_t * stk, int capacity);
+void            StackDestroy(stack_t * stk);
 void            PrintLogs(StackErr_ID err, int line, const char * func);
+#endif

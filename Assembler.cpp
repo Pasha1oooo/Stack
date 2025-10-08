@@ -10,10 +10,14 @@ typedef enum state{
 state Translation(FILE * fin1, FILE * fin2);
 bool ComparisonStr(const char * str1, const char * str2);
 
-int main(void){
-    FILE * fin1 = fopen("funcs.txt", "r");
-    FILE * fin2 = fopen("translated.txt", "w");
-    while(Translation(fin1, fin2) == success){}
+int main(int argc, char * argv[]){
+    FILE * fin1 = fopen(argv[1], "r");
+    FILE * fin2 = fopen(argv[2], "w");
+    fprintf(fin2, "                     "); ///???????
+    int i = 0;                                                      //
+    while(Translation(fin1, fin2) == success){i++;}
+    fseek(fin2, 0, SEEK_SET);                                       //
+    fprintf(fin2, "%d", i);                                      //
     return 0;
 }
 
@@ -60,6 +64,20 @@ state Translation(FILE * fin1, FILE * fin2) {
     }
     else if(ComparisonStr(func, "OUT")) {
         fprintf(fin2, "8 ");
+        return success;
+    }
+    else if(ComparisonStr(func, "POPR")) {
+        int elem = 0;
+        fscanf(fin1, "%d", &elem);
+        fprintf(fin2, "10 ");
+        fprintf(fin2, "%d ", elem);
+        return success;
+    }
+    else if(ComparisonStr(func, "PUSHR")) {
+        int elem = 0;
+        fscanf(fin1, "%d", &elem);
+        fprintf(fin2, "11 ");
+        fprintf(fin2, "%d ", elem);
         return success;
     }
     else if(ComparisonStr(func, "HLT")) {

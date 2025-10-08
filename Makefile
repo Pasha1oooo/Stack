@@ -16,8 +16,8 @@ CXXFLAGS= -g -lm -D _DEBUG -ggdb3  -O0 -Wall -Wextra \
 all: spu asm
 
 run: all
-	./asm
-	./spu
+	./asm funcs.asm byte.txt
+	./spu byte.txt
 
 asm: Assembler.cpp
 	g++ -o asm Assembler.cpp
