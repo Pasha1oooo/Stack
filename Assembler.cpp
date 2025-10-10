@@ -11,7 +11,7 @@ void Translation(FILE * fin1, FILE * fin2);
 bool ComparisonStr(const char * str1, const char * str2);
 
 int main(int argc, char * argv[]){
-    printf("Meow");
+    printf("Meow\n");
     FILE * fin1 = fopen(argv[1], "r");
     FILE * fin2 = fopen(argv[2], "w");
     Translation(fin1, fin2);
@@ -79,8 +79,9 @@ void Translation(FILE * fin1, FILE * fin2) {
         }
         else if(ComparisonStr(func, "JMP")) {
             buffer[i] = 999;
-            printf("Meow");
+            printf("%d\n", i);
             fscanf(fin1 ,"%s", &func);
+            i++;
             if(ComparisonStr(func, ":")) {
                 buffer[i] = labels[(int)(func[1] - '0')];
             }
@@ -88,7 +89,8 @@ void Translation(FILE * fin1, FILE * fin2) {
                 buffer[i] = atoi(func);
             }
         }
-        else if(ComparisonStr(func, ":")) {
+        else if(func[0] == ':') {
+            printf("abc %d %d %d", (int)(func[1] - '0'), func[1], 1);
             labels[(int)(func[1] - '0')] = i;
             i--;
         }
