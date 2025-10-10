@@ -16,7 +16,6 @@ void StackInit(stack_t * stk, int capacity){
     CANARYLEFT(stk)  = CANARY_NUM;
     CANARYRIGHT(stk) = CANARY_NUM;
     stk->size = 1;
-
     return;
 }
 

@@ -7,84 +7,100 @@ typedef enum state{
     success = 1
 }state;
 
-state Translation(FILE * fin1, FILE * fin2);
+void Translation(FILE * fin1, FILE * fin2);
 bool ComparisonStr(const char * str1, const char * str2);
 
 int main(int argc, char * argv[]){
+    printf("Meow");
     FILE * fin1 = fopen(argv[1], "r");
     FILE * fin2 = fopen(argv[2], "w");
-    fprintf(fin2, "                     "); ///???????
-    int i = 0;                                                      //
-    while(Translation(fin1, fin2) == success){i++;}
-    fseek(fin2, 0, SEEK_SET);                                       //
-    fprintf(fin2, "%d", i);                                      //
+    Translation(fin1, fin2);
     return 0;
 }
 
-state Translation(FILE * fin1, FILE * fin2) {
-    char  func[100];
-    fscanf(fin1 ,"%s", &func);
-    if(ComparisonStr(func, "INIT")) {
-        int capacity = 0;
-        fscanf(fin1, "%d", &capacity);
-        fprintf(fin2, "0 ");
-        fprintf(fin2, "%d ", capacity);
-        return success;
+void Translation(FILE * fin1, FILE * fin2) {
+    char func[1000];
+    int buffer[1000];
+    int labels[10];
+    int i = 0;
+    while(!(ComparisonStr(func, "HLT"))){
+        fscanf(fin1 ,"%s", &func);
+        if(ComparisonStr(func, "INIT")) {
+            int capacity = 0;
+            fscanf(fin1, "%d", &capacity);
+            buffer[i] = -1;
+            i++;
+            buffer[i] = capacity;
+        }
+        else if(ComparisonStr(func, "PUSH")) {
+            int elem = 0;
+            fscanf(fin1, "%d", &elem);
+            buffer[i] = 1;
+            i++;
+            buffer[i] = elem;
+        }
+        else if(ComparisonStr(func, "POP")) {
+            buffer[i] = 2;
+        }
+        else if(ComparisonStr(func, "ADD")) {
+            buffer[i] = 3;
+        }
+        else if(ComparisonStr(func, "SUB")) {
+            buffer[i] = 4;
+        }
+        else if(ComparisonStr(func, "MUL")) {
+            buffer[i] = 5;
+        }
+        else if(ComparisonStr(func, "DIV")) {
+            buffer[i] = 6;
+        }
+        else if(ComparisonStr(func, "SQRT")) {
+            buffer[i] = 7;
+        }
+        else if(ComparisonStr(func, "OUT")) {
+            buffer[i] = 8;
+        }
+        else if(ComparisonStr(func, "POPR")) {
+            int elem = 0;
+            fscanf(fin1, "%d", &elem);
+            buffer[i] = 33;
+            i++;
+            buffer[i] = elem;
+        }
+        else if(ComparisonStr(func, "PUSHR")) {
+            int elem = 0;
+            fscanf(fin1, "%d", &elem);
+            buffer[i] = 42;
+            i++;
+            buffer[i] = elem;
+        }
+        else if(ComparisonStr(func, "HLT")) {
+            buffer[i] = 0;
+        }
+        else if(ComparisonStr(func, "JMP")) {
+            buffer[i] = 999;
+            printf("Meow");
+            fscanf(fin1 ,"%s", &func);
+            if(ComparisonStr(func, ":")) {
+                buffer[i] = labels[(int)(func[1] - '0')];
+            }
+            else{
+                buffer[i] = atoi(func);
+            }
+        }
+        else if(ComparisonStr(func, ":")) {
+            labels[(int)(func[1] - '0')] = i;
+            i--;
+        }
+        else if(func[0] == '#'){
+            i--;
+        }
+        i++;
     }
-    if(ComparisonStr(func, "PUSH")) {
-        int elem = 0;
-        fscanf(fin1, "%d", &elem);
-        fprintf(fin2, "1 ");
-        fprintf(fin2, "%d ", elem);
-        return success;
+    fprintf(fin2, "%d ", i);
+    for(int j = 0;j < i; j++){
+        fprintf(fin2, "%d ", buffer[j]);
     }
-    else if(ComparisonStr(func, "POP")) {
-        fprintf(fin2, "2 ");
-        return success;
-    }
-    else if(ComparisonStr(func, "ADD")) {
-        fprintf(fin2, "3 ");
-        return success;
-    }
-    else if(ComparisonStr(func, "SUB")) {
-        fprintf(fin2, "4 ");
-        return success;
-    }
-    else if(ComparisonStr(func, "MUL")) {
-        fprintf(fin2, "5 ");
-        return success;
-    }
-    else if(ComparisonStr(func, "DIV")) {
-        fprintf(fin2, "6 ");
-        return success;
-    }
-    else if(ComparisonStr(func, "SQRT")) {
-        fprintf(fin2, "7 ");
-        return success;
-    }
-    else if(ComparisonStr(func, "OUT")) {
-        fprintf(fin2, "8 ");
-        return success;
-    }
-    else if(ComparisonStr(func, "POPR")) {
-        int elem = 0;
-        fscanf(fin1, "%d", &elem);
-        fprintf(fin2, "10 ");
-        fprintf(fin2, "%d ", elem);
-        return success;
-    }
-    else if(ComparisonStr(func, "PUSHR")) {
-        int elem = 0;
-        fscanf(fin1, "%d", &elem);
-        fprintf(fin2, "11 ");
-        fprintf(fin2, "%d ", elem);
-        return success;
-    }
-    else if(ComparisonStr(func, "HLT")) {
-        fprintf(fin2, "9 ");
-        return failed;
-    }
-    return failed;
 }
 
 bool ComparisonStr(const char * str1, const char * str2) {

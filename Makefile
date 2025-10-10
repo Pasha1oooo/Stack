@@ -1,6 +1,6 @@
 #!/bin/sh
 
-CXXFLAGS= -g -lm -D _DEBUG -ggdb3  -O0 -Wall -Wextra \
+CXXFLAGS= -g -lm -D _DEBUG -ggdb3  -O0 -Wall -Wextra  \
   -Waggressive-loop-optimizations -Wmissing-declarations -Wcast-align -Wcast-qual \
    -Wchar-subscripts -Wconversion -Wempty-body -Wfloat-equal \
     -Wformat-nonliteral -Wformat-security -Wformat-signedness \
@@ -20,14 +20,14 @@ run: all
 	./spu byte.txt
 
 asm: Assembler.cpp
-	g++ -o asm Assembler.cpp
+	@g++ -o asm Assembler.cpp -lm
 
 spu: SPU.o StackFuncs.o
-	g++  SPU.o StackFuncs.o -o spu
+	@g++ SPU.o StackFuncs.o -o spu -lm
 
 StackFuncs.o: StackFuncs.cpp StackHeader.h
-	g++  -c StackFuncs.cpp -o StackFuncs.o
+	@g++ -c StackFuncs.cpp -o StackFuncs.o -lm
 
 SPU.o: SPU.cpp Colors.h
-	g++  -c SPU.cpp -o SPU.o
+	@g++ -c SPU.cpp -o SPU.o -lm
 
