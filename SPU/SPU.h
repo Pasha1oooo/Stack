@@ -8,8 +8,8 @@ typedef enum state{
 }state;
 
 typedef enum Stack_command{
-    INIT =  -1,
-    PUSH = 1,
+    INIT =  10,
+    PUSH = 11,
     POP = 2,
     ADD = 3,
     SUB = 4,
@@ -18,9 +18,10 @@ typedef enum Stack_command{
     SQRT = 7,
     OUT = 8,
     HLT = 0,
-    POPR = 33,
-    PUSHR = 42,
-    JMP = 50
+    POPR = 12,
+    PUSHR = 13,
+    JMP = 50,
+    JB = 51
 }Stack_command;
 
 

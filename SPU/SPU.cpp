@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "Colors.h"
-#include "StackHeader.h"
-#include "spuHeader.h"
-// strange work MUL and DIV == 0
+#include "../lib/Colors.h"
+#include "../stack/Stack.h"
+#include "../SPU/SPU.h"
+// strange work MUL and DIV == 0 out of range
 
 typedef struct Code{
     int * code;
-    int code_capacity;
+    size_t code_capacity;
     int ic;
 }Code;
 
@@ -25,16 +25,14 @@ void ProcessorDestroy(processor * proc);
 
 int main(int argc, char * argv[]){
     printf("Meow\n");
+
     FILE * fin = fopen(argv[1],"r");
     processor proc = {};
     ProcessorInit(&proc);
     LoadDataFromFile(&proc, fin);
 
-    int i = 0;
-    while(DoInstructions(&proc) == success){
-        i++;
-    }
-    //ProcessorDestroy(&proc);
+    while(DoInstructions(&proc) == success){}
+    ProcessorDestroy(&proc);
     return 0;
 }
 //init in main
@@ -121,14 +119,26 @@ state DoInstructions(processor * proc){
     case JMP :
         (proc->code.ic) = proc->code.code[proc->code.ic + 1];
         return success;
-    default :
+    case JB :
+        LOGS(StackPop(&proc->stk, &a));
+        LOGS(StackPop(&proc->stk, &b));
+        if(a > b){
+            (proc->code.ic) = proc->code.code[proc->code.ic + 1];
+        }
+        else if (a <= b){
+            (proc->code.ic) += 2;
+        }
         return success;
+    default :
+        return failed;
     }
 }
 
 void ProcessorInit(processor * proc){
     proc->code.ic = 1;
-    proc->code.code_capacity = proc->code.code[0];
+    proc->code.code_capacity = 0;
+    proc->code.code = NULL;
+    StackInit(&proc->stk, 0);
     return;
 }
 
@@ -141,15 +151,14 @@ void ProcessorDestroy(processor * proc){
 
 void LoadDataFromFile(processor * proc, FILE * fin){
     int i = 0;
-    fscanf(fin, "%d", &proc->code.code[i]);
+    fscanf(fin, "%td", &proc->code.code_capacity);///////////////////////td size_t
     i++;
-    proc->code.code_capacity = proc->code.code[0];
-    proc->code.code = (int*)calloc(proc->code.code_capacity * 2, sizeof(int));
-    StackInit(&(proc->stk), proc->code.code_capacity * 2);
+    proc->code.code = (int*)calloc(proc->code.code_capacity, sizeof(int));
+    proc->code.code[0] = proc->code.code_capacity;
 
     while(fscanf(fin, "%d", &proc->code.code[i]) != EOF){
-        //printf("%d \n",proc->code.code[i]);
         i++;
     }
+    printf("%d \n",proc->code.code[0]);
     return;
 }

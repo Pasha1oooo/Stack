@@ -16,18 +16,18 @@ CXXFLAGS= -g -lm -D _DEBUG -ggdb3  -O0 -Wall -Wextra  \
 all: spu asm
 
 run: all
-	./asm funcs.asm byte.txt
-	./spu byte.txt
+	./run/asm run/funcs.asm run/byte.txt
+	./run/spu run/byte.txt
 
 asm: Assembler.cpp
-	@g++ -o asm Assembler.cpp -lm
+	@g++ -o run/asm Assembler.cpp -lm
 
-spu: SPU.o StackFuncs.o
-	@g++ SPU.o StackFuncs.o -o spu -lm
+spu: obj/SPU.o obj/Stack.o
+	@g++ obj/SPU.o obj/Stack.o -o run/spu -lm
 
-StackFuncs.o: StackFuncs.cpp StackHeader.h
-	@g++ -c StackFuncs.cpp -o StackFuncs.o -lm
+obj/Stack.o: stack/Stack.cpp stack/Stack.h
+	@g++ -c stack/Stack.cpp -o obj/Stack.o -lm
 
-SPU.o: SPU.cpp Colors.h
-	@g++ -c SPU.cpp -o SPU.o -lm
+SPU.o: SPU/SPU.cpp lib/Colors.h
+	@g++ -c SPU.cpp -o obj/SPU.o -lm
 
