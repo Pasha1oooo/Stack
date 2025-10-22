@@ -24,7 +24,8 @@ void ProcessorInit(processor * proc);
 void ProcessorDestroy(processor * proc);
 
 int main(int argc, char * argv[]){
-    printf("Meow\n");
+    printf("sfsfsfsfsf\n");
+    //printf("Meow10\n");
 
     FILE * fin = fopen(argv[1],"r");
     processor proc = {};
@@ -32,16 +33,18 @@ int main(int argc, char * argv[]){
     LoadDataFromFile(&proc, fin);
 
     while(DoInstructions(&proc) == success){}
+
     ProcessorDestroy(&proc);
     return 0;
 }
 //init in main
 state DoInstructions(processor * proc){
     int a = 0, b = 0;
-    //printf("%d    %d\n", proc->code.code[proc->code.ic], proc->code.ic);
-    switch((Stack_command)proc->code.code[proc->code.ic]){
+    //printf("%d\n", proc->code.code[proc->code.ic]);
+    switch((Stack_command)(proc->code.code[proc->code.ic])){
     case INIT :
         StackDestroy(&proc->stk);
+        printf("Meow10FF %d\n", proc->code.code[proc->code.ic+1]);
         StackInit(&proc->stk, proc->code.code[proc->code.ic+1]);
         (proc->code.ic) += 2;
         return success;
@@ -55,7 +58,6 @@ state DoInstructions(processor * proc){
         return success;
     case POPR :
         LOGS(StackPop(&proc->stk, &a));
-        //printf("%d\n", proc->code.code[proc->code.ic+1]);
         (proc->registers)[proc->code.code[proc->code.ic+1]] = a;
         (proc->code.ic) += 2;
         return success;
@@ -117,13 +119,13 @@ state DoInstructions(processor * proc){
         (proc->code.ic) += 1;
         return success;
     case JMP :
-        (proc->code.ic) = proc->code.code[proc->code.ic + 1];
+        (proc->code.ic) = proc->code.code[proc->code.ic + 1] - 1;
         return success;
     case JB :
         LOGS(StackPop(&proc->stk, &a));
         LOGS(StackPop(&proc->stk, &b));
         if(a > b){
-            (proc->code.ic) = proc->code.code[proc->code.ic + 1];
+            (proc->code.ic) = proc->code.code[proc->code.ic + 1] - 1;
         }
         else if (a <= b){
             (proc->code.ic) += 2;
@@ -135,7 +137,7 @@ state DoInstructions(processor * proc){
 }
 
 void ProcessorInit(processor * proc){
-    proc->code.ic = 1;
+    proc->code.ic = 0;
     proc->code.code_capacity = 0;
     proc->code.code = NULL;
     StackInit(&proc->stk, 0);
@@ -151,14 +153,20 @@ void ProcessorDestroy(processor * proc){
 
 void LoadDataFromFile(processor * proc, FILE * fin){
     int i = 0;
-    fscanf(fin, "%td", &proc->code.code_capacity);///////////////////////td size_t
+    fread(&proc->code.code_capacity, sizeof(int), 1,fin);
+    //fscanf(fin, "%td", &proc->code.code_capacity);///////////////////////td size_t
     i++;
     proc->code.code = (int*)calloc(proc->code.code_capacity, sizeof(int));
     proc->code.code[0] = proc->code.code_capacity;
 
-    while(fscanf(fin, "%d", &proc->code.code[i]) != EOF){
-        i++;
-    }
+    printf("%d %d\n", proc->code.code_capacity, i);
+    fread(proc->code.code, sizeof(int), proc->code.code_capacity,fin);
+
     printf("%d \n",proc->code.code[0]);
+    printf("%d \n",proc->code.code[1]);
     return;
 }
+
+    //while(fscanf(fin, "%d", &proc->code.code[i]) != EOF){
+    //    i++;
+    //}

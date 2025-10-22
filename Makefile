@@ -13,21 +13,21 @@ CXXFLAGS= -g -lm -D _DEBUG -ggdb3  -O0 -Wall -Wextra  \
     -Wstack-usage=8192 -pie -fPIE -Werror=vla \
     -fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,float-divide-by-zero,integer-divide-by-zero,leak,nonnull-attribute,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,undefined,unreachable,vla-bound,vptr
 
-all: spu asm
+all: spu2 asm
 
 run: all
 	./run/asm run/funcs.asm run/byte.txt
-	./run/spu run/byte.txt
+	./run/spu2 run/byte.txt
 
 asm: Assembler.cpp
 	@g++ -o run/asm Assembler.cpp -lm
 
-spu: obj/SPU.o obj/Stack.o
-	@g++ obj/SPU.o obj/Stack.o -o run/spu -lm
+spu2: SPU.o obj/Stack.o
+	@g++ SPU.o obj/Stack.o -o run/spu2 -lm
 
-obj/Stack.o: stack/Stack.cpp stack/Stack.h
+Stack.o: stack/Stack.cpp stack/Stack.h
 	@g++ -c stack/Stack.cpp -o obj/Stack.o -lm
 
 SPU.o: SPU/SPU.cpp lib/Colors.h
-	@g++ -c SPU.cpp -o obj/SPU.o -lm
+	@g++ -c SPU/SPU.cpp -o SPU.o -lm
 

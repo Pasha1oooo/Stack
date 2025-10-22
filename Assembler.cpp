@@ -23,7 +23,7 @@ bool ComparisonStr(const char * str1, const char * str2);
 void LoadToFile(FILE * fin2,  Byte * text);
 
 int main(int argc, char * argv[]){
-    printf("Meow\n");
+    //printf("Meow\n");
     if(argc < 3){
        printf("Not enough arguments (must be 2 arguments)\n");
        return 0;
@@ -109,9 +109,9 @@ void Translation(FILE * fin1, Byte * text, const char * funcs[2][7]) {
 }
 
 void LoadToFile(FILE * fin2,  Byte * text){
-    fprintf(fin2, "%d ", text->len);
+    fwrite(&(text->len), sizeof(int), 1,fin2);
     for(int j = 0;j < text->len; j++){
-        fprintf(fin2, "%.64b ", text->a[j]);
+        fwrite(&(text->a[j]), sizeof(int), 1,fin2);
     }
 }
 
