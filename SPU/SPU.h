@@ -2,10 +2,11 @@
 #define spu_header
 
 #include <stdlib.h>
-typedef enum state{
+
+typedef enum WorkResult{
     failed = 0,
     success = 1
-}state;
+}WorkResult;
 
 typedef enum Stack_command{
     HLT = 0,
@@ -21,7 +22,16 @@ typedef enum Stack_command{
     POPR = 12,
     PUSHR = 13,
     JMP = 50,
-    JB = 51
+    JB = 51,
+    JA = 52,
+    JBE = 53,
+    JAE = 54,
+    JE = 55,
+    JNE = 56,
+    PUSHM = 60,
+    POPM = 61,
+    CALL = 90,
+    RET = 1
 }Stack_command;
 
 

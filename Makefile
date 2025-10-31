@@ -16,11 +16,11 @@ CXXFLAGS= -g -lm -D _DEBUG -ggdb3  -O0 -Wall -Wextra  \
 all: spu2 asm
 
 run: all
-	./run/asm run/funcs.asm run/byte.txt
-	./run/spu2 run/byte.txt
+	./run/asm run/funcs.asm run/ByteCode.txt
+	./run/spu2 run/ByteCode.txt
 
-asm: Assembler.cpp
-	@g++ -o run/asm Assembler.cpp -lm
+asm: asm/Assembler.cpp
+	@g++  -o run/asm asm/Assembler.cpp -lm
 
 spu2: SPU.o obj/Stack.o
 	@g++ SPU.o obj/Stack.o -o run/spu2 -lm
